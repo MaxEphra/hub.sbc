@@ -312,8 +312,8 @@
     <div id="linkGerado"></div>
     <div id="infoRota"></div>
 
-   <!-- Botão do WhatsApp para o grupo dos motoboys -->
-   <a class="whatsapp-btn" href="https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa" target="_blank">Grupo WhatsApp</a>
+    <!-- Botão do WhatsApp para o grupo dos motoboys -->
+    <a class="whatsapp-btn" href="https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa" onclick="abrirGrupoWhatsApp()">Grupo WhatsApp</a>
 
     <!-- Modal para links externos -->
     <div class="modal" id="modal">
@@ -412,8 +412,47 @@
 
         // Função para compartilhar rota via WhatsApp
         function compartilharWhatsApp(contato, mensagem) {
-            let url = `https://wa.me/${contato}?text=${mensagem}`;
-            window.open(url, '_blank');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // Tenta abrir no WhatsApp Business
+                const urlBusiness = `intent://send?phone=${contato}&text=${encodeURIComponent(mensagem)}#Intent;scheme=smsto;package=com.whatsapp.w4b;end`;
+                window.location.href = urlBusiness;
+
+                // Fallback: Se o WhatsApp Business não estiver instalado, abre o WhatsApp comum
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        const urlRegular = `https://api.whatsapp.com/send?phone=${contato}&text=${encodeURIComponent(mensagem)}`;
+                        window.location.href = urlRegular;
+                    }
+                }, 2000); // Aguarda 2 segundos para verificar se o WhatsApp Business abriu
+            } else {
+                // Usa o link padrão para desktop (WhatsApp Web)
+                const url = `https://web.whatsapp.com/send?phone=${contato}&text=${encodeURIComponent(mensagem)}`;
+                window.open(url, '_blank');
+            }
+        }
+
+        // Função para abrir o grupo do WhatsApp
+        function abrirGrupoWhatsApp() {
+            const linkGrupo = "https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa"; // Link do grupo
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // Tenta abrir no WhatsApp Business
+                const urlBusiness = `intent://send?phone=${linkGrupo.replace('https://chat.whatsapp.com/', '')}#Intent;scheme=smsto;package=com.whatsapp.w4b;end`;
+                window.location.href = urlBusiness;
+
+                // Fallback: Se o WhatsApp Business não estiver instalado, abre o WhatsApp comum
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        window.location.href = linkGrupo; // Abre o link do grupo no WhatsApp comum
+                    }
+                }, 2000); // Aguarda 2 segundos para verificar se o WhatsApp Business abriu
+            } else {
+                // Usa o link padrão para desktop (WhatsApp Web)
+                window.open(linkGrupo, '_blank');
+            }
         }
 
         // Função para limpar o roteiro
