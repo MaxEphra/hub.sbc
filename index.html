@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub SBC Beep</title>
+    <style>
+        /* (Mantenha o mesmo estilo que você já tem) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e272e, #485460);
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #f1c40f;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            background: #2f3640;
+            color: white;
+            resize: none;
+        }
+
+        .buttons, .motoboy-selector {
+            margin: 15px 0;
+        }
+
+        button {
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .generate-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .generate-btn:hover {
+            background: #219150;
+        }
+
+        .clear-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background: #c0392b;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .maps-btn {
+            background: #0078FF;
+            color: white;
+        }
+
+        .result {
+            background: #34495e;
+            padding: 15px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .atendimento {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #2d3e50;
+            border-left: 5px solid #f1c40f;
+            word-wrap: break-word;
+            transition: background 0.3s;
+        }
+
+        .atendimento.concluido {
+            background: #2ecc71;
+        }
+
+        .horario {
+            font-weight: bold;
+            color: #e6ff08;
+            font-size: 20px;
+        }
+
+        nav {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: #3498db;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        nav a:hover {
+            background: #2980b9;
+        }
+
+        .dropbtn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .dropbtn:hover {
+            background-color: #2980b9;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #2f3640;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #3498db;
+            border-radius: 8px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background: #1da851;
+        }
+
+        .concluido-checkbox {
+            margin-top: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal iframe {
+            width: 90%;
+            height: 80%;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .motoboy-selector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .motoboy-line {
+            display: flex;
+            gap: 15px;
+        }
+        .motoboy-btn {
+            background: #2f3640;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .motoboy-btn.selecionado {
+            background: #27ae60;
+        }
+
+        .maps-btn {
+         display: inline-block;
+         padding: 10px 15px;
+         margin-top: 10px;
+         border-radius: 8px;
+         background: #0078FF;
+         color: white;
+         text-decoration: none;
+         transition: 0.3s;
+         } 
+    </style>
+</head>
+<body>
+    <h1>Roteiro SBC</h1>
+    
+    <nav>
+        <a href="https://resgates.beepsaude.com.br/roteirizacoes/vila-olimpia" onclick="abrirModal(event)">Rotas</a>
+        <a href="https://oswaldo.beepsaude.com.br/drivers" onclick="abrirModal(event)">Placa</a>
+        <a href="https://app.pipefy.com/public/form/lJ5KfVnq" onclick="abrirModal(event)">Entregue</a>
+        <a href="https://maxephra.github.io/hub" onclick="abrirModal(event)">Contato</a>
+    </nav>
+
+    <!-- Menu suspenso para navegação entre os motoboys -->
+    <div class="dropdown">
+        <button class="dropbtn"> Menu Motoboys</button>
+        <div class="dropdown-content">
+            <a href="henrique.html">Henrique</a>
+            <a href="kaue.html">Kaue</a>
+            <a href="ygor.html">Ygor</a>
+            <a href="felipe.html">Felipe</a>
+            <a href="max.html">Max</a>
+            <a href="samuel.html">Samuel</a>
+            <a href="index.html">Roteirizador</a>
+        </div>
+    </div>
+    
+    <textarea id="inputData" placeholder="Cole os agendamentos aqui..."></textarea>
+    
+    <div class="motoboy-selector">
+        <div class="motoboy-line">
+            <div class="motoboy-btn" data-nome="Henrique" onclick="selecionarMotoboy('Henrique')">Henrique</div>
+            <div class="motoboy-btn" data-nome="Kaue" onclick="selecionarMotoboy('Kaue')">Kaue</div>
+            <div class="motoboy-btn" data-nome="Ygor" onclick="selecionarMotoboy('Ygor')">Ygor</div>
+            <div class="motoboy-btn" data-nome="Felipe" onclick="selecionarMotoboy('Felipe')">Felipe</div>
+        </div>
+        <div class="motoboy-line">
+            <div class="motoboy-btn" data-nome="Max" onclick="selecionarMotoboy('Max')">Max</div>
+            <div class="motoboy-btn" data-nome="Samuel" onclick="selecionarMotoboy('Samuel')">Samuel</div>
+        </div>
+    </div>
+    
+    <div class="buttons">
+        <button class="generate-btn" onclick="gerarRoteiro()">Gerar Roteiro</button>
+        <button class="clear-btn" onclick="limparRoteiro()">Limpar Rotas</button>
+    </div>
+    
+    <div id="output"></div>
+    <div id="linkGerado"></div>
+    <div id="infoRota"></div>
+
+   <!-- Botão do WhatsApp para o grupo dos motoboys -->
+   <a class="whatsapp-btn" href="https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa" target="_blank">Grupo WhatsApp</a>
+
+    <!-- Modal para links externos -->
+    <div class="modal" id="modal">
+        <div class="modal-close" onclick="fecharModal()">Fechar</div>
+        <iframe id="modal-iframe" src=""></iframe>
+    </div>
+
+    <script>
+        // Contatos dos motoboys
+        const contatosMotoboys = {
+            "Henrique": "5511959951486",
+            "Kaue": "5511986156687",
+            "Ygor": "5511962973313",
+            "Felipe": "5511948661057",
+            "Max": "5511989321702",
+            "Samuel": "5511951489934",
+        };
+
+        // Motoboys selecionados
+        let motoboysSelecionados = [];
+
+        // Função para selecionar motoboy
+        function selecionarMotoboy(nome) {
+            const botao = document.querySelector(`.motoboy-btn[data-nome='${nome}']`);
+            if (motoboysSelecionados.includes(nome)) {
+                motoboysSelecionados = motoboysSelecionados.filter(m => m !== nome);
+                botao.classList.remove('selecionado');
+            } else {
+                motoboysSelecionados.push(nome);
+                botao.classList.add('selecionado');
+            }
+        }
+
+        // Função para gerar roteiro
+        function gerarRoteiro() {
+            let inputText = document.getElementById("inputData").value.trim();
+            if (!inputText) return alert("Cole os agendamentos antes de gerar o roteiro.");
+            if (motoboysSelecionados.length === 0) return alert("Selecione pelo menos um motoboy.");
+            
+            let linhas = inputText.split("\n\n").map(l => l.trim()).filter(l => l !== "");
+            let atendimentos = linhas.map(l => {
+                let horario = l.match(/\d{2}:\d{2}/)[0];
+                let enderecoMatch = l.match(/Endereço: (.*)/);
+                let endereco = enderecoMatch ? enderecoMatch[1] : ""; // Captura o endereço após "Endereço:"
+                return { horario, detalhes: l, endereco };
+            }).sort((a, b) => a.horario.localeCompare(b.horario));
+            
+            let motoboyRoutes = {};
+            let index = 0;
+            for (let atendimento of atendimentos) {
+                let motoboy = motoboysSelecionados[index % motoboysSelecionados.length];
+                if (!motoboyRoutes[motoboy]) motoboyRoutes[motoboy] = [];
+                motoboyRoutes[motoboy].push(atendimento);
+                index++;
+            }
+
+            // Salvar as rotas no localStorage para cada motoboy
+            for (let motoboy in motoboyRoutes) {
+                localStorage.setItem(`rotas_${motoboy}`, JSON.stringify(motoboyRoutes[motoboy]));
+            }
+
+            // Exibir as rotas na página
+            let outputDiv = document.getElementById("output");
+            outputDiv.innerHTML = "";
+            for (let motoboy in motoboyRoutes) {
+                let motoboyHTML = `<div class='result'><h3>${motoboy}</h3>`;
+                let whatsappMessage = `Rotas de ${motoboy}:\n\n`; // Mensagem para o WhatsApp
+                
+                motoboyRoutes[motoboy].forEach((rota, i) => {
+                    motoboyHTML += `<div class='atendimento' id='atendimento-${motoboy}-${i}'>
+                        <p><span class='horario'>${rota.horario}</span><br>${rota.detalhes.replace(/\n/g, '<br>')}</p>
+                        <a class='maps-btn' href='https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(rota.endereco)}' target='_blank'>Abrir no Maps</a>
+                        <div class='concluido-checkbox'>
+                            <label>
+                                <input type='checkbox' onchange='marcarConcluido("${motoboy}-${i}")'> Concluído
+                            </label>
+                        </div>
+                    </div>`;
+                    whatsappMessage += `${rota.horario} - ${rota.detalhes}\n\n`; // Adiciona a rota à mensagem
+                });
+                
+                // Botão do WhatsApp no final da rota do motoboy
+                motoboyHTML += `<button class='whatsapp-btn' onclick="compartilharWhatsApp('${contatosMotoboys[motoboy]}', '${whatsappMessage.replace(/\n/g, '%0A')}')">Enviar rota para ${motoboy}</button>`;
+                motoboyHTML += `</div>`;
+                outputDiv.innerHTML += motoboyHTML;
+            }
+        }
+
+        // Função para marcar atendimento como concluído
+        function marcarConcluido(id) {
+            let atendimento = document.getElementById(`atendimento-${id}`);
+            if (atendimento) {
+                atendimento.classList.toggle('concluido');
+            }
+        }
+
+        // Função para compartilhar rota via WhatsApp
+        function compartilharWhatsApp(contato, mensagem) {
+            let url = `https://wa.me/${contato}?text=${mensagem}`;
+            window.open(url, '_blank');
+        }
+
+        // Função para limpar o roteiro
+        function limparRoteiro() {
+            document.getElementById("inputData").value = "";
+            document.getElementById("output").innerHTML = "";
+            motoboysSelecionados = [];
+            document.querySelectorAll('.motoboy-btn').forEach(botao => {
+                botao.classList.remove('selecionado');
+            });
+        }
+
+        // Modal para links externos
+        function abrirModal(event) {
+            event.preventDefault();
+            let modal = document.getElementById("modal");
+            let iframe = document.getElementById("modal-iframe");
+            iframe.src = event.target.href;
+            modal.style.display = "flex";
+        }
+
+        function fecharModal() {
+            let modal = document.getElementById("modal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
