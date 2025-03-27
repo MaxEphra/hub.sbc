@@ -283,28 +283,6 @@ nav a:hover {
             let modal = document.getElementById("modal");
             modal.style.display = "none";
         }
-
-         // Função para abrir o grupo do WhatsApp
-         function abrirGrupoWhatsApp() {
-            const linkGrupo = "https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa"; // Link do grupo
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-            if (isMobile) {
-                // Tenta abrir no WhatsApp Business
-                const urlBusiness = `intent://send?phone=${linkGrupo.replace('https://chat.whatsapp.com/', '')}#Intent;scheme=smsto;package=com.whatsapp.w4b;end`;
-                window.location.href = urlBusiness;
-
-                // Fallback: Se o WhatsApp Business não estiver instalado, abre o WhatsApp comum
-                setTimeout(() => {
-                    if (!document.hidden) {
-                        window.location.href = linkGrupo; // Abre o link do grupo no WhatsApp comum
-                    }
-                }, 2000); // Aguarda 2 segundos para verificar se o WhatsApp Business abriu
-            } else {
-                // Usa o link padrão para desktop (WhatsApp Web)
-                window.open(linkGrupo, '_blank');
-            }
-        }
         // Carregar as rotas ao abrir a página
         carregarRotas();
     </script>
