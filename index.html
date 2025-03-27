@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub SBC Beep</title>
     <style>
-        /* (Mantenha o mesmo estilo que você já tem) */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -77,6 +76,12 @@
         .maps-btn {
             background: #0078FF;
             color: white;
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
         }
 
         .result {
@@ -251,17 +256,6 @@
         .motoboy-btn.selecionado {
             background: #27ae60;
         }
-
-        .maps-btn {
-         display: inline-block;
-         padding: 10px 15px;
-         margin-top: 10px;
-         border-radius: 8px;
-         background: #0078FF;
-         color: white;
-         text-decoration: none;
-         transition: 0.3s;
-         } 
     </style>
 </head>
 <body>
@@ -274,7 +268,6 @@
         <a href="https://maxephra.github.io/hub" onclick="abrirModal(event)">Contato</a>
     </nav>
 
-    <!-- Menu suspenso para navegação entre os motoboys -->
     <div class="dropdown">
         <button class="dropbtn"> Menu Motoboys</button>
         <div class="dropdown-content">
@@ -312,10 +305,8 @@
     <div id="linkGerado"></div>
     <div id="infoRota"></div>
 
-   <!-- Botão do WhatsApp para o grupo dos motoboys -->
-   <a class="whatsapp-btn" href="https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa" target="_blank">Grupo WhatsApp</a>
+    <a class="whatsapp-btn" href="https://chat.whatsapp.com/FNDIAEs7v8AGZo1culEHSa" target="_blank">Grupo WhatsApp</a>
 
-    <!-- Modal para links externos -->
     <div class="modal" id="modal">
         <div class="modal-close" onclick="fecharModal()">Fechar</div>
         <iframe id="modal-iframe" src=""></iframe>
@@ -347,6 +338,22 @@
             }
         }
 
+        // Função para extrair o endereço CORRETAMENTE (linha após "Endereço")
+        function extrairEnderecoCorretamente(texto) {
+            const linhas = texto.split('\n');
+            
+            for (let i = 0; i < linhas.length; i++) {
+                if (linhas[i].trim() === "Endereço") {
+                    // Pega a próxima linha (que contém o endereço completo)
+                    if (i + 1 < linhas.length) {
+                        return linhas[i + 1].trim();
+                    }
+                }
+            }
+            
+            return "Endereço não encontrado";
+        }
+
         // Função para gerar roteiro
         function gerarRoteiro() {
             let inputText = document.getElementById("inputData").value.trim();
@@ -356,8 +363,7 @@
             let linhas = inputText.split("\n\n").map(l => l.trim()).filter(l => l !== "");
             let atendimentos = linhas.map(l => {
                 let horario = l.match(/\d{2}:\d{2}/)[0];
-                let enderecoMatch = l.match(/Endereço: (.*)/);
-                let endereco = enderecoMatch ? enderecoMatch[1] : ""; // Captura o endereço após "Endereço:"
+                let endereco = extrairEnderecoCorretamente(l);
                 return { horario, detalhes: l, endereco };
             }).sort((a, b) => a.horario.localeCompare(b.horario));
             
@@ -380,7 +386,7 @@
             outputDiv.innerHTML = "";
             for (let motoboy in motoboyRoutes) {
                 let motoboyHTML = `<div class='result'><h3>${motoboy}</h3>`;
-                let whatsappMessage = `Rotas de ${motoboy}:\n\n`; // Mensagem para o WhatsApp
+                let whatsappMessage = `Rotas de ${motoboy}:\n\n`;
                 
                 motoboyRoutes[motoboy].forEach((rota, i) => {
                     motoboyHTML += `<div class='atendimento' id='atendimento-${motoboy}-${i}'>
@@ -392,10 +398,9 @@
                             </label>
                         </div>
                     </div>`;
-                    whatsappMessage += `${rota.horario} - ${rota.detalhes}\n\n`; // Adiciona a rota à mensagem
+                    whatsappMessage += `${rota.horario} - ${rota.detalhes}\n\n`;
                 });
                 
-                // Botão do WhatsApp no final da rota do motoboy
                 motoboyHTML += `<button class='whatsapp-btn' onclick="compartilharWhatsApp('${contatosMotoboys[motoboy]}', '${whatsappMessage.replace(/\n/g, '%0A')}')">Enviar rota para ${motoboy}</button>`;
                 motoboyHTML += `</div>`;
                 outputDiv.innerHTML += motoboyHTML;
